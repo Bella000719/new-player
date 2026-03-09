@@ -7,32 +7,23 @@
         :root { --neon-red: #ff003c; --dark-bg: #050505; }
         body { background: var(--dark-bg); color: white; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: #111; padding: 2rem; border: 2px solid var(--neon-red); box-shadow: 0 0 20px var(--neon-red); text-align: center; width: 400px; }
-        
-        /* 視覺元件：離散音量格 */
         .vol-grid { display: flex; justify-content: center; gap: 5px; margin: 20px 0; }
-        .vol-step { width: 40px; height: 40px; border: 1px solid var(--neon-red); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .vol-step.active { background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
-
-        /* 視覺元件：連續進度條 */
+        .vol-step { width: 40px; height: 40px; border: 1px solid var(--neon-red); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--neon-red); }
+        .vol-step.active { background: var(--neon-red); color: #fff; box-shadow: 0 0 10px var(--neon-red); }
         .progress-container { width: 100%; height: 10px; background: #333; margin: 20px 0; cursor: col-resize; }
         #progress-bar { width: 0%; height: 100%; background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
-
-        /* 旋鈕 */
-        .knob { width: 80px; height: 80px; border: 3px solid var(--neon-red); border-radius: 50%; margin: 10px auto; cursor: pointer; transition: transform 0.1s; }
+        .knob { width: 80px; height: 80px; border: 3px solid var(--neon-red); border-radius: 50%; margin: 10px auto; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1 style="color:var(--neon-red)">NEON REVERSE</h1>
-    
     <div class="knob" id="ctrl-knob"></div>
     <p>ROTATE: PLAY/STOP/SEEK</p>
-
     <div class="progress-container" id="seek-area">
         <div id="progress-bar"></div>
     </div>
-
     <div class="vol-grid">
         <div class="vol-step" data-vol="0">0</div>
         <div class="vol-step" data-vol="0.25">1</div>
@@ -51,7 +42,6 @@
     const bar = document.getElementById('progress-bar');
     const steps = document.querySelectorAll('.vol-step');
 
-    // 1. 離散控制音量
     steps.forEach(step => {
         step.addEventListener('click', () => {
             steps.forEach(s => s.classList.remove('active'));
@@ -60,19 +50,16 @@
         });
     });
 
-    // 2. 連續控制播放與快轉
     let isDragging = false;
     knob.addEventListener('mousedown', () => isDragging = true);
     window.addEventListener('mouseup', () => isDragging = false);
     window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        // 用滑鼠位置當作旋轉輸入 (連續)
         const val = (e.clientX / window.innerWidth);
         audio.currentTime = val * audio.duration;
         audio.play();
     });
 
-    // 更新進度條
     audio.addEventListener('timeupdate', () => {
         const percent = (audio.currentTime / audio.duration) * 100;
         bar.style.width = percent + '%';
@@ -82,3 +69,4 @@
 </html>
  
   
+
